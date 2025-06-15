@@ -209,7 +209,15 @@ Para garantizar la calidad y el correcto funcionamiento de la aplicación, el pr
 
 ### 6.1. Pruebas del Backend
 
-El backend utiliza **Jest** para las pruebas unitarias y de integración (end-to-end). Para ejecutarlas, puedes acceder al contenedor del backend.
+El backend utiliza Jest para pruebas unitarias y de integración (end-to-end), las cuales se ejecutan accediendo al contenedor del backend.
+
+Para las pruebas unitarias, es necesario levantar el servicio con las dependencias de desarrollo, lo que implica iniciar el backend por separado (sin el composer productivo).
+
+*   **Levantar el Backend para Pruebas**:
+    ```bash
+    # Comando a ejecutar dentro de la carpeta del backend:
+    docker-compose up -d
+    ```
 
 *   **Ejecutar Pruebas Unitarias**:
     ```bash
