@@ -1,0 +1,34 @@
+services:
+  # Servicio de la API de Backend
+  api:
+    container_name: catalog_api
+    build:
+      context: . # Construye usando el Dockerfile en el directorio actual
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env # Carga las variables de entorno desde el archivo .env local
+    depends_on:
+      - database
+    networks:
+      - app-network
+
+  # Servicio de la Base de Datos
+  database:
+    container_name: catalog_db
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
