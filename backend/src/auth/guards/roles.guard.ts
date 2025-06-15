@@ -19,8 +19,7 @@ export class RolesGuard implements CanActivate {
 
     const { user } = context.switchToHttp().getRequest();
 
-    // Obtener los roles del usuario desde el payload del token JWT
-    // La clave debe coincidir con el namespace configurado en la Action de Auth0
+    // Obtener los roles del usuario
     const userRoles = user.roles || [];
 
     // Verificar si el usuario tiene al menos uno de los roles requeridos
