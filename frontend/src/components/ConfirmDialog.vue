@@ -13,14 +13,30 @@
   </v-dialog>
 </template>
 <script>
+/**
+ * Componente de diálogo de confirmación genérico.
+ * Muestra un título, un texto y botones para cancelar o confirmar una acción.
+ */
 export default {
   name: 'ConfirmDialog',
   props: {
+    /**
+     * Controla la visibilidad del diálogo.
+     */
     dialog: Boolean,
+    /**
+     * Título del diálogo de confirmación.
+     */
     title: { type: String, default: 'Confirmar' },
+    /**
+     * Texto principal del diálogo de confirmación.
+     */
     text: { type: String, default: '¿Estás seguro?' },
   },
   methods: {
+      /**
+       * Emite el evento 'confirm' y cierra el diálogo.
+       */
       confirm() {
           this.$emit('confirm');
           this.$emit('update:dialog', false);

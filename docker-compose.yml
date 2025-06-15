@@ -1,0 +1,62 @@
+# docker-compose.yml
+services:
+  # Servicio del Frontend (Vue.js + Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      # Pasa las variables del .env al proceso de build de la imagen
+      args:
+        - VUE_APP_AUTH0_DOMAIN=${VUE_APP_AUTH0_DOMAIN}
+        - VUE_APP_AUTH0_CLIENT_ID=${VUE_APP_AUTH0_CLIENT_ID}
+        - VUE_APP_AUTH0_AUDIENCE=${VUE_APP_AUTH0_AUDIENCE}
+    container_name: nexus-frontend
+    ports:
+      - "8080:80"
+    networks:
+      - nexus-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Servicio del Backend (NestJS)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nexus-backend
+    ports:
+      - "3000:3000"
+    networks:
+      - nexus-network
+    # Carga las variables de entorno para el contenedor del backend
+    env_file:
+      - ./.env
+    depends_on:
+      - database
+    restart: unless-stopped
+
+  # Servicio de la Base de Datos (MongoDB)
+  database:
+    image: mongo:latest
+    container_name: nexus-database
+    ports:
+      - "27017:27017"
+    networks:
+      - nexus-network
+    env_file:
+      - ./.env
+    volumes:
+      # Volumen para la persistencia de los datos
+      - mongo-data:/data/db
+      # Monta nuestro script de seeding en el directorio de inicialización
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+networks:
+  nexus-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local

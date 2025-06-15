@@ -1,7 +1,9 @@
-// frontend/src/plugins/api.js
-
 import axios from 'axios';
 import Vue from 'vue'; // Importamos Vue para acceder a sus prototipos
+
+/**
+ * Plugin de Vue para integrar un cliente API basado en Axios.
+ */
 
 // Crea una instancia de Axios con configuración base
 const apiClient = axios.create({
@@ -12,10 +14,13 @@ const apiClient = axios.create({
   }
 });
 
-// Usa un interceptor para añadir el token de Auth0 a cada petición
+/**
+ * Interceptor de peticiones de Axios.
+ * Añade el token de acceso de Auth0 a la cabecera 'Authorization' de cada petición
+ * si el usuario está autenticado.
+ * @param {Object} config - La configuración de la petición.
+ */
 apiClient.interceptors.request.use(async (config) => {
-  // Accedemos directamente a la instancia global de $auth que vive en Vue.
-  // Esta es una forma mucho más fiable de obtener el servicio.
   const authService = Vue.prototype.$auth;
 
   if (authService && authService.isAuthenticated) {
@@ -33,11 +38,13 @@ apiClient.interceptors.request.use(async (config) => {
   return Promise.reject(error);
 });
 
-
+/**
+ * Objeto plugin para Vue.
+ * Instala el cliente API (`apiClient`) en el prototipo de Vue como `$api`,
+ * haciéndolo accesible en cualquier componente o instancia de Vue.
+ */
 export const ApiPlugin = {
-  // La función de instalación ahora es más simple
   install(Vue) {
-    // Hacemos la instancia de Axios disponible en toda la app como this.$api
     Vue.prototype.$api = apiClient;
   }
 };

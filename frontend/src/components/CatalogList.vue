@@ -84,11 +84,13 @@ export default {
         return headers;
     },
     isAdmin() {
+      // Verifica si el usuario está autenticado. Si no, no puede ser admin.
       if (!this.$auth.isAuthenticated) return false;
       // Es más seguro verificar que $auth.user exista antes de acceder a sus propiedades
       const user = this.$auth.user;
-      console.log(user)
+      // Si el objeto user no existe (por ejemplo, si la carga falló), no es admin.
       if (!user) return false;
+      // Accede a los roles del usuario desde el claim personalizado y verifica si incluye 'admin'.
       const roles = user['https://api.catalog-manager.com/roles'] || [];
       return roles.includes('admin');
     }
