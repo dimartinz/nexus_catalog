@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateCatalogDto } from './dto/create-catalog.dto';
@@ -7,11 +7,18 @@ import { Catalog, CatalogDocument } from './schemas/catalog.schema';
 
 @Injectable()
 export class CatalogsService {
-  constructor(@InjectModel(Catalog.name) private catalogModel: Model<CatalogDocument>) {}
+  constructor(@InjectModel(Catalog.name) private catalogModel: Model<CatalogDocument>) { }
 
   async create(createCatalogDto: CreateCatalogDto): Promise<Catalog> {
-    const createdCatalog = new this.catalogModel(createCatalogDto);
-    return createdCatalog.save();
+    try {
+      const createdCatalog = await this.catalogModel.create(createCatalogDto);
+      return createdCatalog;
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new ConflictException(`Ya existe un catálogo con el nombre "${createCatalogDto.name}"`);
+      }
+      throw error;
+    }
   }
 
   async findAll(): Promise<Catalog[]> {

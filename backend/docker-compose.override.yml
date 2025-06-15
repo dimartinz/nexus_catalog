@@ -1,0 +1,13 @@
+services:
+  api:
+    build:
+      context: .
+      # Le decimos a Docker que se detenga en la etapa 'builder', que sí tiene todo
+      target: builder 
+    volumes:
+      # Montamos nuestro código local dentro del contenedor para ver los cambios al instante (hot-reload)
+      - .:/usr/src/app
+      # Importante: Esto evita que el node_modules de nuestra máquina local sobreescriba el del contenedor
+      - /usr/src/app/node_modules
+    # Sobreescribimos el comando de inicio para que use el modo de desarrollo de NestJS
+    command: npm run start:dev
