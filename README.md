@@ -203,7 +203,27 @@ Gracias al script `mongo-init/seed.js`, la aplicación se iniciará con **15 pro
 
 ---
 
-## 6. Archivos de Configuración
+## 6. Pruebas Unitarias y E2E
+
+Para garantizar la calidad y el correcto funcionamiento de la aplicación, el proyecto incluye un conjunto de pruebas.
+
+### 6.1. Pruebas del Backend
+
+El backend utiliza **Jest** para las pruebas unitarias y de integración (end-to-end). Para ejecutarlas, puedes acceder al contenedor del backend.
+
+*   **Ejecutar Pruebas Unitarias**:
+    ```bash
+    docker-compose exec backend npm run test
+    ```
+*   **Ejecutar Pruebas End-to-End**: (Requiere que el resto de los servicios, como la base de datos, estén corriendo).
+    ```bash
+    docker-compose exec backend npm run test:e2e
+    ```
+
+
+---
+
+## 7. Archivos de Configuración
 
 #### `docker-compose.yml`
 
